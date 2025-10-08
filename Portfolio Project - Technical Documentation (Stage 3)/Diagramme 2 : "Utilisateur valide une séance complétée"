@@ -1,0 +1,30 @@
+@startuml
+title 🏋️ FITNESS CLASH - Cas d'usage 2 : Valider une séance complétée ✅
+
+actor "👤 Utilisateur" as User
+participant "🖥️ Front-End" as Frontend
+participant "⚙️ Back-End" as Backend
+participant "🗄️ Database" as Database
+
+User -> Frontend: 😮‍💨 Termine la séance (temps: 15 min = 900s)
+User -> Frontend: 💯 Clique "VALIDER MA SÉANCE !"
+
+Frontend -> Backend: 📡 POST /api/workouts/42/complete\n{"score": 900, "completed": true}
+activate Backend
+
+Backend -> Database: 🔄 UPDATE workouts\nSET completed=TRUE, score=900, completed_at=NOW()\nWHERE id=42
+activate Database
+Database --> Backend: ✅ UPDATE successful
+deactivate Database
+
+Backend -> Database: 📊 SELECT COUNT(*) FROM workouts\nWHERE user_id=1 AND completed=TRUE
+activate Database
+Database --> Backend: 📈 Total: 47 séances
+deactivate Database
+
+Backend --> Frontend: 📦 JSON: {success: true, score: 900, total: 47}
+deactivate Backend
+
+Frontend --> User: 🎉 "BRAVO ! Séance validée !"\n💪 Temps: 15 min | 🔥 47 séances au total
+
+@enduml
