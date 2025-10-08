@@ -1,0 +1,32 @@
+@startuml
+title 🏋️ Cas d'usage 1 : Lancer une séance d'entraînement 💪
+
+actor "👤 Utilisateur" as User
+participant "🖥️ Front-End\n(React)" as Frontend
+participant "⚙️ Back-End\n(FastAPI)" as Backend
+participant "🗄️ Database\n(PostgreSQL)" as Database
+
+User -> Frontend: 🤩 Clique "Let's go ! Démarre ta séance"
+activate Frontend
+
+Frontend -> Backend: 📡 GET /api/workouts/1
+activate Backend
+note right of Backend: Récupération des infos\nde la séance
+
+Backend -> Database: 🔍 SELECT workout WHERE id=1
+activate Database
+Database --> Backend: ✅ Workout data
+deactivate Database
+
+Backend -> Database: 🔍 SELECT exercises\nFROM workout_exercises\nWHERE workout_id=1
+activate Database
+Database --> Backend:  Liste des exercices\n(Pompes, Squats, Planche...)
+deactivate Database
+
+Backend --> Frontend: 🎯💪 JSON {workout, exercises[]}
+deactivate Backend
+note left of Frontend: Préparation de\nl'affichage
+
+Frontend --> User: 🥵🎊 Affiche ta séance :\n"3 exercices te attendent !"
+deactivate Frontend
+@enduml
